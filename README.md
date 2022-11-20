@@ -1,3 +1,3 @@
 # CalculatorProgram
 
-# Simple calculator program written in java
+Simple calculator program written in java
