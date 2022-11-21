@@ -13,7 +13,7 @@ public class Calculator {
 
     public void run() {
         System.out.println("Calculator program, please enter valid sum to begin, enter 'exit' to exit program");
-        while(this.running == true) {
+        while(this.running) {
             String userInput = scannerObj.nextLine();
             if(userInput.equals("exit") || userInput.equals("EXIT")) {
                 System.out.println("Goodbye!");
@@ -27,7 +27,7 @@ public class Calculator {
     private void handleUserInput(String userInput) {
         InputValidator validationObj = new InputValidator(userInput);
 
-        if(validationObj.validate() == true) {
+        if(validationObj.validate()) {
             String[] splitInput = splitString(userInput);
             if(splitInput.length == 3) {
                 if (userInput.contains("+")) {
@@ -70,8 +70,6 @@ public class Calculator {
 
     private int longSum(String[] splitList) {
 
-        int answer = 0;
-
         // get initial answer form the first sum
         int firstSumAnswer = 0;
         if (splitList[1].contains("+")) {
@@ -84,34 +82,47 @@ public class Calculator {
             firstSumAnswer = this.divisionSum(splitList);
         }
 
-        for(int i = 3; i < splitList.length; i++) {
+        // then, to the sum with every increment of two
+        // for example: 2 + 2 + 1, "+ 1" would be added to the answer of 2 + 2, and so on
 
-            List<String> newSum = new ArrayList<String>();
+        // all valid input should be a odd number length, if the number is even, it's likely invalid
+        if(splitList.length % 2 != 0) {
+            for (int i = 3; i < splitList.length; i++) {
 
-            if(splitList[i].contains("x")) {
-                newSum.add("*");
-            } else if(splitList[i].contains("÷")) {
-                newSum.add("/");
-            } else {
+                List<String> newSum = new ArrayList<String>();
+
+                // check for mathematical symbols
+                // add operator chosen and number to new list
+                if (splitList[i].contains("x")) {
+                    newSum.add("*");
+                } else if (splitList[i].contains("÷")) {
+                    newSum.add("/");
+                } else {
+                    newSum.add(splitList[i]);
+                }
+                i++;
                 newSum.add(splitList[i]);
-            }
-            i++;
-            newSum.add(splitList[i]);
 
-            if(newSum.get(0).contains("+")) {
-                firstSumAnswer = firstSumAnswer + Integer.parseInt(newSum.get(1));
-            } else if(newSum.get(0).contains("-")) {
-                firstSumAnswer = firstSumAnswer - Integer.parseInt(newSum.get(1));
-            } else if(newSum.get(0).contains("*")) {
-                firstSumAnswer = firstSumAnswer * Integer.parseInt(newSum.get(1));
-            } else if(newSum.get(0).contains("/")) {
-                firstSumAnswer = firstSumAnswer / Integer.parseInt(newSum.get(1));
-            }
+                // do sum according to input
+                if (newSum.get(0).contains("+")) {
+                    firstSumAnswer = firstSumAnswer + Integer.parseInt(newSum.get(1));
+                } else if (newSum.get(0).contains("-")) {
+                    firstSumAnswer = firstSumAnswer - Integer.parseInt(newSum.get(1));
+                } else if (newSum.get(0).contains("*")) {
+                    firstSumAnswer = firstSumAnswer * Integer.parseInt(newSum.get(1));
+                } else if (newSum.get(0).contains("/")) {
+                    firstSumAnswer = firstSumAnswer / Integer.parseInt(newSum.get(1));
+                }
 
+
+            }
+        } else {
+            System.out.println("Error with input, please try again");
+            firstSumAnswer = 0;
         }
 
-        return firstSumAnswer;
 
+        return firstSumAnswer;
     }
 
 
